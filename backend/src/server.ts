@@ -3,6 +3,7 @@ import compression from 'compression';
 import cors from 'cors';
 import config from './config';
 import { HostRoutes } from './host/hostRoutes';
+import { PortRoutes } from './port/portRoutes';
 
 export class Server {
     public app: express.Application;
@@ -23,7 +24,7 @@ export class Server {
 
     public routes(): void {
         this.app.use("/api/host", new HostRoutes().router);
-        // this.app.use("/api/port", new PortRoutes().router);
+        this.app.use("/api/port", new PortRoutes().router);
     }
 
     public start(): void {

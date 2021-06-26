@@ -3,37 +3,9 @@ import { Request, Response } from 'express';
 import config from '../config';
 import * as mongo from '../mongo';
 
-export class HostController {
+export class PortController {
 
-    public async getHosts(req: Request, res: Response): Promise<void> {
-        const client = await mongo.getConnection().connect();
-        const db = client.db('tunnlr');
-        const hosts = db.collection('hosts');
-
-        hosts.find(
-            {
-
-            }
-        ).project(
-            {
-                identity: 0
-            }
-        ).sort(
-            {
-                _id: -1
-            }
-        )
-        .toArray()
-        .then(data => {
-            res.json(data);
-        }).catch(error => {
-            res.sendStatus(500);
-        }).finally(() => {
-            client.close();
-        });
-    }
-
-    public async getHost(req: Request, res: Response): Promise<void> {
+    public async getPort(req: Request, res: Response): Promise<void> {
         const client = await mongo.getConnection().connect();
         const db = client.db('tunnlr');
         const hosts = db.collection('hosts');
@@ -52,77 +24,19 @@ export class HostController {
 
         hosts.findOne(
             {
-                _id
-            }
-        ).then(data => {
-            res.json(data);
-        }).catch(error => {
-            res.sendStatus(500);
-        }).finally(() => {
-            client.close();
-        });
-    }
-
-    public async postHost(req: Request, res: Response): Promise<void> {
-        const client = await mongo.getConnection().connect();
-        const db = client.db('tunnlr');
-        const hosts = db.collection('hosts');
-
-        hosts.insertOne(
-            {
-                lastChanged: new Date(),
-                hostname: req.body.hostname,
-                port: req.body.port,
-                username: req.body.username,
-                identity: req.body.identity,
-                active: req.body.active,
-                comment: req.body.comment,
-                ports: []
-            }
-        ).then(data => {
-            res.json(data);
-        }).catch(error => {
-            res.sendStatus(500);
-        }).finally(() => {
-            client.close();
-        });
-    }
-
-    public async putHost(req: Request, res: Response): Promise<void> {
-        const client = await mongo.getConnection().connect();
-        const db = client.db('tunnlr');
-        const hosts = db.collection('hosts');
-
-        let _id;
-
-        try
-        {
-            _id = new ObjectId(req.body._id);
-        }
-        catch(e)
-        {
-            res.sendStatus(400);
-            return;
-        }
-        
-        hosts.updateOne(
-            {
-                _id
+                "ports._id": _id
             },
             {
-                $set:
+                projection:
                 {
-                    lastChanged: new Date(),
-                    hostname: req.body.hostname,
-                    port: req.body.port,
-                    username: req.body.username,
-                    identity: req.body.identity,
-                    active: req.body.active,
-                    comment: req.body.comment
+                    ports:
+                    {
+                        $elemMatch: { _id }
+                    }
                 }
             }
         ).then(data => {
-            res.json(data);
+            res.json(data.ports[0]);
         }).catch(error => {
             res.sendStatus(500);
         }).finally(() => {
@@ -130,7 +44,7 @@ export class HostController {
         });
     }
 
-    public async deleteHost(req: Request, res: Response): Promise<void> {
+    public async postPort(req: Request, res: Response): Promise<void> {
         const client = await mongo.getConnection().connect();
         const db = client.db('tunnlr');
         const hosts = db.collection('hosts');
@@ -147,9 +61,111 @@ export class HostController {
             return;
         }
         
-        hosts.deleteOne(
+        hosts.updateOne(
             {
                 _id
+            },
+            {
+                $set:
+                {
+                    lastChanged: new Date()
+                },
+                $push:
+                {
+                    ports:
+                    {
+                        _id: new ObjectId(),
+                        remotePort: req.body.remotePort,
+                        localHostname: req.body.localHostname,
+                        localPort: req.body.localPort,
+                        active: req.body.active,
+                        comment: req.body.comment
+                    }
+                }
+            }
+        ).then(data => {
+            res.json(data);
+        }).catch(error => {
+            res.sendStatus(500);
+        }).finally(() => {
+            client.close();
+        });
+    }
+
+    public async putPort(req: Request, res: Response): Promise<void> {
+        const client = await mongo.getConnection().connect();
+        const db = client.db('tunnlr');
+        const hosts = db.collection('hosts');
+
+        let _id;
+
+        try
+        {
+            _id = new ObjectId(req.body._id);
+        }
+        catch(e)
+        {
+            res.sendStatus(400);
+            return;
+        }
+
+        hosts.updateOne(
+            {
+                "ports._id": _id
+            },
+            {
+                $set:
+                {
+                    lastChanged: new Date(),
+                    "ports.$":
+                    {
+                        _id,
+                        remotePort: req.body.remotePort,
+                        localHostname: req.body.localHostname,
+                        localPort: req.body.localPort,
+                        active: req.body.active,
+                        comment: req.body.comment
+                    }
+                }
+            }
+        ).then(data => {
+            res.json(data);
+        }).catch(error => {
+            res.sendStatus(500);
+        }).finally(() => {
+            client.close();
+        });
+    }
+
+    public async deletePort(req: Request, res: Response): Promise<void> {
+        const client = await mongo.getConnection().connect();
+        const db = client.db('tunnlr');
+        const hosts = db.collection('hosts');
+
+        let _id;
+
+        try
+        {
+            _id = new ObjectId(req.params.portId);
+        }
+        catch(e)
+        {
+            res.sendStatus(400);
+            return;
+        }
+        
+        hosts.updateOne(
+            {
+                "ports._id": _id
+            },
+            {
+                $pull:
+                {
+                    ports:
+                    {
+                        _id: _id
+                    }
+                }
             }
         ).then(data => {
             res.json(data);
