@@ -11,20 +11,24 @@ nodeName = os.getenv("NODE_NAME", "docker0")
 
 os.makedirs("keys", exist_ok=True)
 
-#hostsCollection = pymongo.MongoClient(dbUrl)[""][""]
+#hostsCollection = pymongo.MongoClient(dbUrl)["tunnlr"]["hosts"]
 
 all_procs = dict()
 
-def log_output(host_id, proc):
+print("Started")
+
+def monitor_process(host_id, proc):
     for line in iter(proc.stdout.readline, b''):
         print(f"{host_id}: {line.decode('utf-8')}", end='')
+    print(f"{host_id}: Exited")
+    del all_procs[host_id]
 
 def init_process(host_id, lastChanged, cmd):
     global all_procs
     proc = subprocess.Popen(cmd,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.STDOUT)
-    t = threading.Thread(target=log_output, args=(host_id, proc))
+    t = threading.Thread(target=monitor_process, args=(host_id, proc))
     t.start()
     print(f"Started {host_id}: {' '.join(cmd)}")
     all_procs[host_id] = {
@@ -51,7 +55,7 @@ def check_for_change():
             "lastChanged": "gestern",
             "identity": "asdsd",
             "username": "u",
-            "hostname": "p",
+            "hostname": "localhost",
             "port": 22,
             "ports": [
                 {
@@ -72,9 +76,9 @@ def check_for_change():
             proc.terminate()
             try:
                 proc.wait(timeout=0.2)
-                print ('subprocess exited ', proc.returncode)
+                print (f'{host["_id"]} changed subprocess exited ', proc.returncode)
             except subprocess.TimeoutExpired:
-                print('subprocess killed violently')
+                print(f'{host["_id"]} subprocess killed violently')
             del all_procs[host["_id"]]
             yield host
 
