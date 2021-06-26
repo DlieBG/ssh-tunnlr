@@ -36,7 +36,7 @@ def generate_cmd(host):
     f = open(f"keys/{host['_id']}", "w")
     f.writelines(host["identity"])
     f.close()
-    cmd = ["autossh", "-M", "0", "-o", "ConnectionTimeout=10", "-o", "ServerAliveInterval=60", "-o", "ServerAliveCountMax=2", "-p", str(host["port"]) ,"-N", "-i", f"keys/{host['_id']}"]
+    cmd = ["autossh", "-M", "0", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=60", "-o", "ServerAliveCountMax=2", "-p", str(host["port"]) ,"-N", "-i", f"keys/{host['_id']}"]
     for port in host["ports"]:
         cmd += ["-R", f"{port['remotePort']}:{port['localHostname']}:{port['localPort']}"]
         
