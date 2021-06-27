@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Host } from 'src/app/interfaces/host';
 
 @Component({
   selector: 'app-host-list-entry',
@@ -7,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HostListEntryComponent implements OnInit {
 
-  constructor() { }
+  @Input() host!: Host;
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  edit() {
+    this.router.navigate(['host', this.host._id]);
   }
 
 }

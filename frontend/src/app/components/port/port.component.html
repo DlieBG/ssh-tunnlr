@@ -1,1 +1,34 @@
-<p>port works!</p>
+<div class="body">
+    <h2>{{ port.name }}</h2>
+    
+    <mat-slide-toggle class="toggle" [(ngModel)]="port.active">Aktiv</mat-slide-toggle>
+
+    <mat-form-field class="form-field" appearance="fill">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" [(ngModel)]="port.name">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+        <mat-label>Remote Port</mat-label>
+        <input matInput type="number" [(ngModel)]="port.remotePort">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+        <mat-label>Local Hostname</mat-label>
+        <input matInput type="text" [(ngModel)]="port.localHostname">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+        <mat-label>Local Port</mat-label>
+        <input matInput type="number" [(ngModel)]="port.localPort">
+    </mat-form-field>
+
+    <mat-form-field class="form-field" appearance="fill">
+        <mat-label>Kommentar</mat-label>
+        <input matInput type="text" [(ngModel)]="port.comment">
+    </mat-form-field> 
+
+    <button mat-icon-button color="primary" (click)="this.location.back()"><mat-icon>arrow_back</mat-icon></button>
+    <button mat-icon-button color="primary" (click)="save()"><mat-icon>save</mat-icon></button>      
+    <button mat-icon-button color="primary" *ngIf="port._id" (click)="delete()"><mat-icon>delete</mat-icon></button>      
+</div>

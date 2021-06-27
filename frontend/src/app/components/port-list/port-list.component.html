@@ -1,1 +1,7 @@
-<p>port-list works!</p>
+<div class="body">
+    <h1>Ports</h1>
+
+    <div class="list">
+        <app-port-list-entry *ngFor="let port of host.ports" [host]="host" [port]="port"></app-port-list-entry>
+    </div>
+</div>

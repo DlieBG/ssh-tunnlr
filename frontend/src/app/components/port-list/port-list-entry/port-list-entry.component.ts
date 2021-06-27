@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Host } from 'src/app/interfaces/host';
+import { Port } from 'src/app/interfaces/port';
 
 @Component({
   selector: 'app-port-list-entry',
@@ -7,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PortListEntryComponent implements OnInit {
 
-  constructor() { }
+  @Input() host!: Host;
+  @Input() port!: Port;
+
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
+  }
+
+  edit() {
+    this.router.navigate(['port', this.port._id]);
   }
 
 }

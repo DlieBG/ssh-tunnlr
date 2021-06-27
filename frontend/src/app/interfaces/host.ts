@@ -8,6 +8,7 @@ export interface Host {
     username: string,
     identity: string,
     active: boolean,
+    name: string,
     comment: string,
     ports: Port[]
 }

@@ -1,1 +1,13 @@
-<p>port-list-entry works!</p>
+<mat-card class="card">
+    <div class="header">
+        <mat-icon class="active" *ngIf="port.active">check_circle</mat-icon>
+        <mat-icon class="inactive" *ngIf="!port.active">cancel</mat-icon>
+        <h3>{{ port.name }}</h3>
+        <button mat-icon-button class="edit" (click)="edit()"><mat-icon>edit</mat-icon></button>
+    </div>
+
+    <div class="details">       
+        <mat-icon>cloud_queue</mat-icon> {{ host.hostname }}:{{ port.remotePort }}<br>
+        <mat-icon>subdirectory_arrow_right</mat-icon> {{ port.localHostname }}:{{ port.localPort }}
+    </div>
+</mat-card>

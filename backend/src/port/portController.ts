@@ -79,6 +79,7 @@ export class PortController {
                         localHostname: req.body.localHostname,
                         localPort: req.body.localPort,
                         active: req.body.active,
+                        name: req.body.name,
                         comment: req.body.comment
                     }
                 }
@@ -124,6 +125,7 @@ export class PortController {
                         localHostname: req.body.localHostname,
                         localPort: req.body.localPort,
                         active: req.body.active,
+                        name: req.body.name,
                         comment: req.body.comment
                     }
                 }

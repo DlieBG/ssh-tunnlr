@@ -1,1 +1,7 @@
-<p>host-list works!</p>
+<div class="body">
+    <h1>Hosts</h1>
+
+    <div class="list">
+        <app-host-list-entry *ngFor="let host of hosts$ | async" [host]="host"></app-host-list-entry>
+    </div>
+</div>

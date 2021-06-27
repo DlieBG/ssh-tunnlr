@@ -1,0 +1,37 @@
+.card {
+    min-width: 300px;
+    max-width: 350px;
+    margin: 1em;
+}
+
+.header {
+
+}
+
+mat-icon {
+    vertical-align: middle;
+    margin-right: .5em;
+}
+
+.active {
+    color: #00bb00;
+}
+
+.inactive {
+    color: #dd0000;
+}
+
+.edit {
+    float: right;
+    color: #9c9c9c;
+}
+
+h3 {
+    display: inline;
+    margin-left: .5em;
+    font-weight: 500;
+}
+
+.details {
+    margin-top: .5em;
+}

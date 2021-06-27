@@ -1,0 +1,12 @@
+.body {
+    margin: 1em;
+}
+
+.list {
+    display: flex;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    // align-items: center;
+    padding-bottom: 2em;
+}

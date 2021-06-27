@@ -42,7 +42,7 @@ export class HostController {
 
         try
         {
-            _id = new ObjectId(req.params.portId);
+            _id = new ObjectId(req.params.hostId);
         }
         catch(e)
         {
@@ -76,6 +76,7 @@ export class HostController {
                 username: req.body.username,
                 identity: req.body.identity,
                 active: req.body.active,
+                name: req.body.name,
                 comment: req.body.comment,
                 ports: []
             }
@@ -118,6 +119,7 @@ export class HostController {
                     username: req.body.username,
                     identity: req.body.identity,
                     active: req.body.active,
+                    name: req.body.name,
                     comment: req.body.comment
                 }
             }

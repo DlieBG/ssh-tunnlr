@@ -4,5 +4,6 @@ export interface Port {
     localHostname: string,
     localPort: string,
     active: boolean,
+    name: string,
     comment: string
 }
