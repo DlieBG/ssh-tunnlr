@@ -14,7 +14,7 @@ if __name__ == '__main__':
         dotenv_path = join(dirname(__file__), '.env')
         load_dotenv(dotenv_path)
 
-refreshInterval = int(os.getenv("REFRESH_INTERVALL", "15"))
+refreshInterval = int(os.getenv("REFRESH_INTERVALL", "10"))
 dbUrl = os.getenv("DB_URL", "mongodb://db:27017/")
 nodeName = os.getenv("NODE_NAME", "docker0")
 
