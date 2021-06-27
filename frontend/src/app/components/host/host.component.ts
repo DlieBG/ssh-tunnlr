@@ -16,7 +16,12 @@ export class HostComponent implements OnInit {
   host$!: Observable<Host>;
   host!: Host;
 
-  constructor(private hostService: HostService, private activatedRoute: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public location: Location) { }
+  constructor(private hostService: HostService, private activatedRoute: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public location: Location) {
+    this.location.subscribe((event) => {
+      if(!this.host._id && event.pop)
+        this.location.back();
+   }); 
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {

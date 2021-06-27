@@ -1,4 +1,4 @@
-<div class="body">
+<div class="body" *ngIf="port">
     <h2>{{ port.name }}</h2>
     
     <mat-slide-toggle class="toggle" [(ngModel)]="port.active">Aktiv</mat-slide-toggle>

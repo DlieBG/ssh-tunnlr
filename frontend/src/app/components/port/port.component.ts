@@ -18,7 +18,12 @@ export class PortComponent implements OnInit {
   port$!: Observable<Port>;
   port!: Port;
 
-  constructor(private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public location: Location) { }
+  constructor(private portService: PortService, private activatedRoute: ActivatedRoute, private router: Router, private snackBar: MatSnackBar, public location: Location) { 
+    this.location.subscribe((event) => {
+      if(!this.port._id && event.pop)
+        this.location.back();
+   }); 
+  }
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe((params) => {
@@ -51,10 +56,8 @@ export class PortComponent implements OnInit {
     if(!this.port._id)
       this.portService.postHost(this.port, this.hostId).subscribe(
         (data) => {
-          console.log(data)
           this.snackBar.open('Port angelegt!', 'ok', { duration: 1500 });
           this.router.navigate(['port', data.insertedId]);
-          
         },
         (err) => {
 
