@@ -45,7 +45,11 @@
     </mat-tab>
     <mat-tab label="Setup Guide">
         <div class="body">
-            
+            <p>Füge folgende drei Zeilen am Ende der Datei <code>/etc/ssh/sshd_config</code> an.</p>
+            <pre>GatewayPorts yes
+ClientAliveInterval 60
+ClientAliveCountMax=2</pre>
+            <p>Starte danach den sshd Service mit <code>service sshd restart</code> neu.</p>
         </div>
     </mat-tab>
 </mat-tab-group>
