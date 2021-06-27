@@ -30,7 +30,10 @@ def monitor_process(host_id, proc):
     for line in iter(proc.stdout.readline, b''):
         print(f"{host_id}: {line.decode('utf-8')}", end='')
     print(f"{host_id}: Exited")
-    del all_procs[host_id]
+    try:
+        del all_procs[host_id]
+    except:
+        pass
 
 def init_process(host_id, lastChanged, cmd):
     global all_procs
@@ -75,7 +78,10 @@ def check_for_change():
                 print (f'{host["_id"]} changed subprocess exited ', proc.returncode)
             except subprocess.TimeoutExpired:
                 print(f'{host["_id"]} subprocess killed violently')
-            del all_procs[host["_id"]]
+            try:
+                del all_procs[host["_id"]]
+            except:
+                pass
             yield host
 
 def main():
