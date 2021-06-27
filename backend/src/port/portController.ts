@@ -49,6 +49,8 @@ export class PortController {
         const db = client.db('tunnlr');
         const hosts = db.collection('hosts');
 
+        let newId = new ObjectId();
+        
         let _id;
 
         try
@@ -74,7 +76,7 @@ export class PortController {
                 {
                     ports:
                     {
-                        _id: new ObjectId(),
+                        _id: newId,
                         remotePort: req.body.remotePort,
                         localHostname: req.body.localHostname,
                         localPort: req.body.localPort,
@@ -85,7 +87,9 @@ export class PortController {
                 }
             }
         ).then(data => {
-            res.json(data);
+            let resData = data as any;
+            resData.insertedId = newId;
+            res.json(resData);
         }).catch(error => {
             res.sendStatus(500);
         }).finally(() => {

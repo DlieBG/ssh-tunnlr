@@ -40,7 +40,7 @@
             <button mat-icon-button color="primary" *ngIf="host._id" (click)="delete()"><mat-icon>delete</mat-icon></button>      
         </div>
     </mat-tab>
-    <mat-tab label="Ports">
+    <mat-tab label="Ports" *ngIf="host._id">
         <app-port-list [host]="host"></app-port-list>
     </mat-tab>
     <mat-tab label="Setup Guide">

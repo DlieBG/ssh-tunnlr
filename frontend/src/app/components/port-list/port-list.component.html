@@ -5,3 +5,9 @@
         <app-port-list-entry *ngFor="let port of host.ports" [host]="host" [port]="port"></app-port-list-entry>
     </div>
 </div>
+
+<div class="fab">
+    <button mat-fab color="primary" (click)="newPort()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

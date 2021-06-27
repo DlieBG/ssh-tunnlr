@@ -28,6 +28,7 @@ export class PortComponent implements OnInit {
       {
         this.hostId = params.hostId;
         this.port = {
+          active: true,
           name: 'New Port'
         } as Port;
       }
@@ -50,8 +51,10 @@ export class PortComponent implements OnInit {
     if(!this.port._id)
       this.portService.postHost(this.port, this.hostId).subscribe(
         (data) => {
+          console.log(data)
           this.snackBar.open('Port angelegt!', 'ok', { duration: 1500 });
           this.router.navigate(['port', data.insertedId]);
+          
         },
         (err) => {
 
@@ -72,7 +75,7 @@ export class PortComponent implements OnInit {
     this.portService.deleteHost(this.port._id).subscribe(
       (data) => {
         this.snackBar.open('Gelöscht!', 'ok', { duration: 1500 });
-        this.router.navigate(['']);
+        this.location.back();
       },
       (err) => {
 

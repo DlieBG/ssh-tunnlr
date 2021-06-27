@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Host } from 'src/app/interfaces/host';
 import { Port } from 'src/app/interfaces/port';
@@ -14,7 +15,7 @@ export class HostListComponent implements OnInit {
   hosts$!: Observable<Host[]>;
   hosts!: Host[];
 
-  constructor(private hostService: HostService) { }
+  constructor(private hostService: HostService, private router: Router) { }
 
   ngOnInit(): void {
     this.getHosts();
@@ -30,6 +31,10 @@ export class HostListComponent implements OnInit {
 
       }
     );
+  }
+
+  newHost() {
+    this.router.navigate(['host']);
   }
 
 }

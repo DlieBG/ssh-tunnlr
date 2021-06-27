@@ -5,3 +5,9 @@
         <app-host-list-entry *ngFor="let host of hosts$ | async" [host]="host"></app-host-list-entry>
     </div>
 </div>
+
+<div class="fab">
+    <button mat-fab color="primary" (click)="newHost()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
