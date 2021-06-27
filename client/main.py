@@ -1,17 +1,26 @@
 from time import sleep
 import os, threading, subprocess
-import dotenv
 import pymongo
-dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
-dotenv.load_dotenv(dotenv_path)
+
+if __name__ == '__main__':
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument('-d', '--dev', action="store_true" ,help='turn on dev')
+    args = parser.parse_args()
+    if args.dev:
+        from os.path import join, dirname
+        from dotenv import load_dotenv
+        dotenv_path = join(dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
 
 refreshInterval = int(os.getenv("REFRESH_INTERVALL", "30"))
-dbUrl = os.getenv("DB_URL", "mongodb://db:2701/")
+dbUrl = os.getenv("DB_URL", "mongodb://db:27017/")
 nodeName = os.getenv("NODE_NAME", "docker0")
 
 os.makedirs("keys", exist_ok=True)
 
-#hostsCollection = pymongo.MongoClient(dbUrl)["tunnlr"]["hosts"]
+hostsCollection = pymongo.MongoClient(dbUrl)["tunnlr"]["hosts"]
 
 all_procs = dict()
 
@@ -38,37 +47,22 @@ def init_process(host_id, lastChanged, cmd):
 
 def generate_cmd(host):
     f = open(f"keys/{host['_id']}", "w")
-    f.writelines(host["identity"])
+    f.write(str(host["identity"]))
     f.close()
     cmd = ["autossh", "-M", "0", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=60", "-o", "ServerAliveCountMax=2", "-p", str(host["port"]) ,"-N", "-i", f"keys/{host['_id']}"]
     for port in host["ports"]:
+        if not port["active"]:
+            continue
         cmd += ["-R", f"{port['remotePort']}:{port['localHostname']}:{port['localPort']}"]
         
     cmd += [f"{host['username']}@{host['hostname']}"]
     return cmd
 
 def check_for_change():
-    #all_hosts = hostsCollection.find({})
-    all_hosts = [
-        {
-            "_id": "hostId",
-            "lastChanged": "gestern",
-            "identity": "asdsd",
-            "username": "u",
-            "hostname": "localhost",
-            "port": 22,
-            "ports": [
-                {
-                    "remotePort": 80,
-                    "localHostname": "localhost",
-                    "localPort": 80,
-                }
-            ]
-        }
-    ]
+    all_hosts = hostsCollection.find({})
     for host in all_hosts:
         host["_id"] = str(host["_id"])
-        if not all_procs.get(host["_id"]):
+        if not all_procs.get(host["_id"]) and host["active"]:
             yield host
             continue
         if host["lastChanged"] != all_procs[host["_id"]]["lastChanged"]:

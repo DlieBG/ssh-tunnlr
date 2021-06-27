@@ -3,25 +3,26 @@ version: '3.1'
 services:
   db:
     image: mongo
-    restart: always
+    restart: unless-stopped
     volumes:
       - tunnlr_db:/data/db
 
   client:
     build: client/
-    restart: always
+    restart: unless-stopped
+    tty: true
     depends_on: 
       - db
 
   backend:
     build: backend/
-    restart: always
+    restart: unless-stopped
     depends_on: 
       - db
 
   frontend:
     build: frontend/
-    restart: always
+    restart: unless-stopped
     depends_on: 
       - backend
     ports:
