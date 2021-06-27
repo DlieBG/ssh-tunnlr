@@ -82,7 +82,8 @@ def check_for_change():
                 del all_procs[host["_id"]]
             except:
                 pass
-            yield host
+            if host["active"]:
+                yield host
 
 def main():
     while True:
