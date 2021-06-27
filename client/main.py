@@ -49,7 +49,8 @@ def generate_cmd(host):
     f = open(f"keys/{host['_id']}", "w")
     f.write(str(host["identity"]))
     f.close()
-    cmd = ["autossh", "-M", "0", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=60", "-o", "ServerAliveCountMax=2", "-p", str(host["port"]) ,"-N", "-i", f"keys/{host['_id']}"]
+    os.chmod(f"keys/{host['_id']}", 0o400)
+    cmd = ["autossh", "-M", "0", "-o", "ConnectTimeout=10", "-o", "ServerAliveInterval=60", "-o", "ServerAliveCountMax=2", "-o", "StrictHostKeyChecking=accept-new", "-p", str(host["port"]) ,"-N", "-i", f"keys/{host['_id']}"]
     for port in host["ports"]:
         if not port["active"]:
             continue
@@ -78,9 +79,12 @@ def check_for_change():
 
 def main():
     while True:
-        for host in check_for_change():
-            cmd = generate_cmd(host)
-            threading.Thread(target=init_process, args=(host["_id"], host["lastChanged"], cmd)).start()
+        try:
+            for host in check_for_change():
+                cmd = generate_cmd(host)
+                threading.Thread(target=init_process, args=(host["_id"], host["lastChanged"], cmd)).start()
+        except Exception as e:
+            print("Error: " + e)
         sleep(refreshInterval)
 
 main()
