@@ -63,8 +63,9 @@ def check_for_change():
     all_hosts = hostsCollection.find({})
     for host in all_hosts:
         host["_id"] = str(host["_id"])
-        if not all_procs.get(host["_id"]) and host["active"]:
-            yield host
+        if not all_procs.get(host["_id"]):
+            if host["active"]:
+                yield host
             continue
         if host["lastChanged"] != all_procs[host["_id"]]["lastChanged"]:
             proc = all_procs[host["_id"]]["proc"]
@@ -84,7 +85,7 @@ def main():
                 cmd = generate_cmd(host)
                 threading.Thread(target=init_process, args=(host["_id"], host["lastChanged"], cmd)).start()
         except Exception as e:
-            print("Error: " + e)
+            print("Error: " + str(e))
         sleep(refreshInterval)
 
 main()
