@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:14
 ENV PORT=80
 WORKDIR /app
 COPY . .
